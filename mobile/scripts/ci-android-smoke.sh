@@ -10,7 +10,31 @@ ls -la pyproject.toml uv.lock
 
 uv sync --locked
 
-adb install /tmp/mda-2.3.0-27.apk
+
+echo "Waiting for Android emulator..."
+
+for attempt in $(seq 1 60); do
+  DEVICE_STATE="$(adb -s emulator-5554 get-state 2>/dev/null || true)"
+
+  if [ "$DEVICE_STATE" = "device" ]; then
+    echo "Android emulator is ready"
+    break
+  fi
+
+  echo "Attempt $attempt/60: emulator state is '$DEVICE_STATE'"
+  sleep 5
+done
+
+DEVICE_STATE="$(adb -s emulator-5554 get-state 2>/dev/null || true)"
+
+if [ "$DEVICE_STATE" != "device" ]; then
+  echo "Android emulator did not become ready"
+  adb devices -l
+  exit 1
+fi
+
+adb -s emulator-5554 install /tmp/mda-2.3.0-27.apk
+
 
 appium --address 127.0.0.1 --port 4723 \
   > /tmp/appium.log 2>&1 &
