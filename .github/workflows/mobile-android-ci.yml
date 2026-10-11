@@ -1,0 +1,99 @@
+name: Mobile Android CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-android:
+    name: Android UI smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: mobile/uv.lock
+
+      - name: Install Python
+        run: uv python install 3.13.8
+
+      - name: Install Appium and UiAutomator2
+        run: |
+          npm install --global appium@3.8.0
+          appium driver install uiautomator2@6.9.3
+
+      - name: Download and verify My Demo App
+        run: |
+          curl --fail --location --retry 3 \
+            "https://github.com/saucelabs/my-demo-app-android/releases/download/2.3.0/mda-2.3.0-27.apk" \
+            --output /tmp/mda-2.3.0-27.apk
+
+          echo "bd3a3d6f2d50e076b2701ed2cc6a0ca82157b40a7033cf5be9f5d084b6591ec8  /tmp/mda-2.3.0-27.apk" \
+            | sha256sum --check
+
+      - name: Run Android UI smoke test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          profile: Pixel_2
+          emulator-options: -no-window -no-audio -no-boot-anim
+          disable-animations: true
+          script: |
+            cd mobile
+            uv sync --locked
+
+            adb install /tmp/mda-2.3.0-27.apk
+
+            appium --address 127.0.0.1 --port 4723 \
+              > /tmp/appium.log 2>&1 &
+
+            for attempt in $(seq 1 30); do
+              if curl --fail --silent \
+                http://127.0.0.1:4723/status > /dev/null; then
+                echo "Appium is ready"
+                break
+              fi
+              sleep 2
+            done
+
+            curl --fail --silent \
+              http://127.0.0.1:4723/status > /dev/null || {
+                cat /tmp/appium.log
+                exit 1
+              }
+
+            export APPIUM_URL=http://127.0.0.1:4723
+            export ANDROID_UDID=emulator-5554
+
+            uv run pytest -v
+
+      - name: Upload Appium logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-logs
+          path: /tmp/appium.log
+          if-no-files-found: ignore
