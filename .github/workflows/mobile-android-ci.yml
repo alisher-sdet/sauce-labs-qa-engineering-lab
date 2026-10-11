@@ -63,7 +63,7 @@ jobs:
           disable-animations: true
           disable-linux-hw-accel: true
           script: |
-            set -euo pipefail
+            set -eu
             cd "$GITHUB_WORKSPACE/mobile"
             uv sync --locked
 
