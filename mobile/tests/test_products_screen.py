@@ -13,7 +13,8 @@ def test_products_screen_is_displayed():
     options = UiAutomator2Options()
     options.platform_name = "Android"
     options.automation_name = "UiAutomator2"
-    options.set_capability("uiautomator2ServerInstallTimeout", 120000)
+    options.set_capability("uiautomator2ServerInstallTimeout", 180000)
+    options.set_capability("uiautomator2ServerLaunchTimeout", 120000)
 
     options.app_package = APP_PACKAGE
     options.app_activity = ".view.activities.SplashActivity"
