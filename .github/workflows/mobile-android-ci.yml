@@ -61,7 +61,7 @@ jobs:
           profile: pixel_2
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot
           disable-animations: true
-          disable-linux-hw-accel: true
+          disable-linux-hw-accel: false
           script: bash mobile/scripts/ci-android-smoke.sh
 
       - name: Upload Appium logs on failure
