@@ -13,6 +13,7 @@ def test_products_screen_is_displayed():
     options = UiAutomator2Options()
     options.platform_name = "Android"
     options.automation_name = "UiAutomator2"
+
     options.set_capability("uiautomator2ServerInstallTimeout", 180000)
     options.set_capability("uiautomator2ServerLaunchTimeout", 120000)
 
@@ -29,9 +30,15 @@ def test_products_screen_is_displayed():
     driver = webdriver.Remote(APPIUM_URL, options=options)
 
     try:
+        print("Current package:", driver.current_package)
+        print("Current activity:", driver.current_activity)
+        print("Page source:")
+        print(driver.page_source)
+
         products_title = WebDriverWait(driver, 15).until(
             lambda d: d.find_element(AppiumBy.ACCESSIBILITY_ID, "title")
         )
+
         assert products_title.is_displayed()
         assert products_title.text == "Products"
     finally:
