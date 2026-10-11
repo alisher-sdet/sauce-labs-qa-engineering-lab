@@ -28,3 +28,31 @@ A practical QA automation lab with three independent test domains:
 - Add CI workflows.
 - Add a reproducible mobile test setup for CI.
 - Document local setup and execution commands.
+
+## Local execution
+
+### Web and API
+
+From the `web-api` directory:
+
+```bash
+npm ci
+npm run typecheck
+npm test
+```
+
+The API tests require the local httpbin service:
+
+```bash
+docker compose up -d
+npm test
+docker compose down
+```
+
+### Mobile
+
+From the `mobile` directory, with an Android emulator running and Appium Server available:
+
+```bash
+uv run pytest -v
+```
