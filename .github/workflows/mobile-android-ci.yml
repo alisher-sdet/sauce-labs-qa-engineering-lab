@@ -63,7 +63,7 @@ jobs:
           disable-animations: true
           disable-linux-hw-accel: true
           script: |
-            cd mobile
+            cd "$GITHUB_WORKSPACE/mobile"
             uv sync --locked
 
             adb install /tmp/mda-2.3.0-27.apk
