@@ -63,7 +63,13 @@ jobs:
           disable-animations: true
           disable-linux-hw-accel: true
           script: |
+            echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+            echo "Current directory: $(pwd)"
+            ls -la "$GITHUB_WORKSPACE"
+            ls -la "$GITHUB_WORKSPACE/mobile"
             cd "$GITHUB_WORKSPACE/mobile"
+            pwd
+            ls -la
             uv sync --locked
 
             adb install /tmp/mda-2.3.0-27.apk
