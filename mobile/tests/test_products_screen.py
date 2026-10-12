@@ -30,11 +30,6 @@ def test_products_screen_is_displayed():
     driver = webdriver.Remote(APPIUM_URL, options=options)
 
     try:
-        print("Current package:", driver.current_package)
-        print("Current activity:", driver.current_activity)
-        print("Page source:")
-        print(driver.page_source)
-
         products_title = WebDriverWait(driver, 15).until(
             lambda d: d.find_element(AppiumBy.ACCESSIBILITY_ID, "title")
         )
