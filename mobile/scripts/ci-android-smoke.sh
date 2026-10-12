@@ -41,6 +41,15 @@ appium --address 127.0.0.1 --port 4723 \
 
 APPIUM_PID=$!
 
+cleanup() {
+  if kill -0 "$APPIUM_PID" 2>/dev/null; then
+    kill "$APPIUM_PID" 2>/dev/null || true
+    wait "$APPIUM_PID" 2>/dev/null || true
+  fi
+}
+
+trap cleanup EXIT
+
 for attempt in $(seq 1 30); do
   if curl --fail --silent \
     http://127.0.0.1:4723/status > /dev/null; then
