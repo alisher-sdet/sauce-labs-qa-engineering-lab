@@ -36,5 +36,15 @@ def test_products_screen_is_displayed():
 
         assert products_title.is_displayed()
         assert products_title.text == "Products"
+
+        product_titles = WebDriverWait(driver, 15).until(
+            lambda d: d.find_elements(
+                AppiumBy.ID,
+                f"{APP_PACKAGE}:id/titleTV",
+            )
+        )
+
+        assert any(title.is_displayed() for title in product_titles)
+
     finally:
         driver.quit()
