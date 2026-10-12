@@ -10,6 +10,54 @@ This repository contains three independent automation domains.
 
 These targets are independent. The repository does not claim an end-to-end integration between them.
 
+## Repository structure
+
+```text
+.
+├── .github/
+│   └── workflows/
+│       ├── mobile-android-ci.yml
+│       └── web-api-ci.yml
+├── docs/
+│   ├── git-commands.md
+│   ├── mobile-commands.md
+│   └── playwright-commands.md
+├── mobile/
+│   ├── scripts/
+│   │   └── ci-android-smoke.sh
+│   ├── tests/
+│   │   └── test_products_screen.py
+│   ├── pyproject.toml
+│   └── uv.lock
+├── web-api/
+│   ├── tests/
+│   │   ├── api/
+│   │   └── web/
+│   ├── compose.yaml
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── playwright.config.ts
+│   └── tsconfig.json
+├── ARCHITECTURE.md
+└── README.md
+```
+
+The Web/API and Mobile domains have separate dependency management and test execution.
+
+## CI boundaries
+
+- Web and API checks are defined in `.github/workflows/web-api-ci.yml`.
+- Mobile Android checks are defined in `.github/workflows/mobile-android-ci.yml`.
+- The mobile CI smoke-test script is located at `mobile/scripts/ci-android-smoke.sh`.
+- CI workflows are maintained separately to keep the test domains independent.
+
+## Documentation
+
+- `README.md` provides the project overview, status, and local execution instructions.
+- `docs/git-commands.md` documents the Git and GitHub workflow.
+- `docs/mobile-commands.md` documents Android Emulator, ADB, Appium, and Pytest commands.
+- `docs/playwright-commands.md` documents Playwright and TypeScript commands.
+
 ## Initial engineering rules
 
 - Keep each domain's dependencies and test execution separate.
