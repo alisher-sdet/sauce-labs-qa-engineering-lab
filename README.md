@@ -2,9 +2,9 @@
 
 A practical QA automation lab with three independent test domains:
 
-- Web UI: SauceDemo + Playwright + TypeScript
-- API: httpbin + Playwright APIRequestContext; ReqRes explored separately
-- Mobile: My Demo App Android + Appium + Python + Pytest
+- **Web UI:** SauceDemo + Playwright + TypeScript
+- **API:** httpbin + Playwright APIRequestContext; ReqRes explored separately
+- **Mobile:** My Demo App Android + Appium + Python + Pytest
 
 ## Principles
 
@@ -20,14 +20,23 @@ A practical QA automation lab with three independent test domains:
 
 - Web UI smoke test: SauceDemo login and inventory page.
 - API smoke test: local httpbin query-parameter response.
-- Mobile smoke test: My Demo App login screen visibility.
+- Mobile smoke tests for My Demo App Android.
 - Dependency lockfiles for Node.js and Python.
+- GitHub Actions workflows for Web/API and Mobile Android CI.
+- Documentation for local test execution and Git workflow.
 
 ### Next
 
-- Add CI workflows.
-- Add a reproducible mobile test setup for CI.
-- Document local setup and execution commands.
+- Continue expanding meaningful Web UI, API, and Mobile test coverage.
+- Improve the reproducibility and reliability of mobile tests in CI.
+- Keep documentation aligned with actual project behavior and CI configuration.
+
+## Documentation
+
+- [Architecture](ARCHITECTURE.md) — project architecture and design principles.
+- [Git commands](docs/git-commands.md) — Git and GitHub workflow.
+- [Mobile testing commands](docs/mobile-commands.md) — Android Emulator, ADB, Appium, and Pytest.
+- [Playwright commands](docs/playwright-commands.md) — Playwright, Web/API tests, and TypeScript.
 
 ## Local execution
 
