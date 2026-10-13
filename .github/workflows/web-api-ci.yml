@@ -69,3 +69,12 @@ jobs:
       - name: Stop local httpbin
         if: always()
         run: docker compose down
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: web-api/playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
