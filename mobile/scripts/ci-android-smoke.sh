@@ -76,4 +76,5 @@ curl --fail --silent \
 export APPIUM_URL=http://127.0.0.1:4723
 export ANDROID_UDID=emulator-5554
 
-uv run pytest -v
+mkdir -p junit-results
+uv run pytest -v --junitxml=junit-results/results.xml

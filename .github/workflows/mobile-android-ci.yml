@@ -77,6 +77,14 @@ jobs:
           disable-linux-hw-accel: false
           script: bash mobile/scripts/ci-android-smoke.sh
 
+      - name: Upload Mobile JUnit XML
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mobile-junit-test-results
+          path: mobile/junit-results/results.xml
+          if-no-files-found: ignore
+
       - name: Upload Appium logs on failure
         if: failure()
         uses: actions/upload-artifact@v7
