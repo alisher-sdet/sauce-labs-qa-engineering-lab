@@ -39,6 +39,10 @@ jobs:
       - name: Install Python
         run: uv python install 3.13.8
 
+      - name: Ruff lint
+        working-directory: mobile
+        run: uv run --locked ruff check .
+
       - name: Install Appium and UiAutomator2
         run: |
           npm install --global appium@3.8.0

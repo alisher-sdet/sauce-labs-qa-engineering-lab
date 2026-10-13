@@ -6,3 +6,19 @@ dependencies = [
     "appium-python-client>=6.0.7",
     "pytest>=9.1.1",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "F",  # Pyflakes
+    "I",  # isort
+]
