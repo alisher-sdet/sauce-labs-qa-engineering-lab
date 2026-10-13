@@ -181,7 +181,14 @@ uv run pytest --collect-only -v tests/test_products_screen.py
 
 ## 6. Проверки перед коммитом
 
-Из корня репозитория:
+Перед коммитом из каталога `mobile`:
+
+```bash
+uv run --locked ruff check .
+uv run pytest -v
+```
+
+Затем из корня репозитория:
 
 ```bash
 git diff --check

@@ -290,6 +290,8 @@ git diff --check
 ```bash
 cd web-api
 npm run typecheck
+npm run lint
+npm run format:check
 npm test
 ```
 
@@ -297,6 +299,7 @@ npm test
 
 ```bash
 cd mobile
+uv run --locked ruff check .
 uv run pytest -v
 ```
 

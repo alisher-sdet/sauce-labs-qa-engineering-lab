@@ -47,7 +47,7 @@ The Web/API and Mobile domains have separate dependency management and test exec
 ## CI boundaries
 
 - Web and API checks are defined in `.github/workflows/web-api-ci.yml`.
-- Web/API CI installs dependencies, runs TypeScript typecheck, starts the local httpbin service, and executes Web/API tests.
+- Web/API CI installs dependencies, runs TypeScript typecheck, ESLint, and Prettier checks, starts the local httpbin service, and executes Web/API tests.
 - Mobile Android checks are defined in `.github/workflows/mobile-android-ci.yml`.
 - Mobile CI provisions an Android emulator, verifies the downloaded My Demo App APK checksum, and invokes `mobile/scripts/ci-android-smoke.sh`.
 - The mobile smoke-test script installs locked Python dependencies, waits for the emulator and Appium readiness, runs Pytest, and attempts to stop the Appium process it started when the script exits.
