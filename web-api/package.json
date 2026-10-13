@@ -11,8 +11,8 @@
     "test:web": "playwright test --project=web",
     "test:api": "playwright test --project=api",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write \"tests/**/*.ts\" \"playwright.config.ts\"",
-    "format:check": "prettier --check \"tests/**/*.ts\" \"playwright.config.ts\"",
+    "format": "prettier --ignore-path ../.prettierignore --write \"../**/*.{md,yml,yaml,json,js,ts}\"",
+    "format:check": "prettier --ignore-path ../.prettierignore --check \"../**/*.{md,yml,yaml,json,js,ts}\"",
     "lint": "eslint ."
   },
   "keywords": [],
