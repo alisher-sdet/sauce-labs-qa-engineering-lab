@@ -78,3 +78,12 @@ jobs:
           path: web-api/playwright-report/
           if-no-files-found: ignore
           retention-days: 14
+
+      - name: Upload JUnit XML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-test-results
+          path: web-api/junit-results/results.xml
+          if-no-files-found: ignore
+          retention-days: 14
