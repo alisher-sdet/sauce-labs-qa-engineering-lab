@@ -87,3 +87,41 @@ jobs:
           path: web-api/junit-results/results.xml
           if-no-files-found: ignore
           retention-days: 14
+
+      - name: Publish test results summary
+        if: always()
+        run: |
+          if [ ! -f junit-results/results.xml ]; then
+            echo "## Web and API test results" >> "$GITHUB_STEP_SUMMARY"
+            echo "JUnit XML report was not generated." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          import os
+
+          root = ET.parse("junit-results/results.xml").getroot()
+
+          def count_attr(name):
+              return sum(
+                  int(suite.attrib.get(name, 0))
+                  for suite in root.iter("testsuite")
+              )
+
+          tests = int(root.attrib.get("tests", count_attr("tests")))
+          failures = int(root.attrib.get("failures", count_attr("failures")))
+          errors = int(root.attrib.get("errors", count_attr("errors")))
+          skipped = int(root.attrib.get("skipped", count_attr("skipped")))
+
+          passed = tests - failures - errors - skipped
+
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              summary.write("## Web and API test results\n\n")
+              summary.write("| Metric | Count |\n|---|---:|\n")
+              summary.write(f"| Passed | {passed} |\n")
+              summary.write(f"| Failed | {failures} |\n")
+              summary.write(f"| Errors | {errors} |\n")
+              summary.write(f"| Skipped | {skipped} |\n")
+              summary.write(f"| Total | {tests} |\n")
+          PY
