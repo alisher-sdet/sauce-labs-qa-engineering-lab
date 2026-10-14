@@ -2,16 +2,19 @@ import { defineConfig } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
 const envFile = ".env.local";
+const loadLocalEnv = process.env.LOAD_LOCAL_ENV !== "false";
 
-try {
-  const envContent = readFileSync(envFile, "utf8");
-  const match = envContent.match(/^REQRES_API_KEY=(.*)$/m);
+if (loadLocalEnv) {
+  try {
+    const envContent = readFileSync(envFile, "utf8");
+    const match = envContent.match(/^REQRES_API_KEY=(.*)$/m);
 
-  if (match?.[1].trim()) {
-    process.env.REQRES_API_KEY ??= match[1].trim();
+    if (match?.[1].trim()) {
+      process.env.REQRES_API_KEY ??= match[1].trim();
+    }
+  } catch {
+    // Local environment file is optional; CI can provide environment variables.
   }
-} catch {
-  // Local environment file is optional; CI can provide environment variables.
 }
 
 export default defineConfig({
