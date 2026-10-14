@@ -27,6 +27,15 @@ A practical QA automation lab with three independent test domains:
 - Mobile CI script: `mobile/scripts/ci-android-smoke.sh` installs locked Python dependencies, waits for the emulator and Appium, runs Pytest, and attempts to stop the Appium process it starts.
 - Documentation for local test execution and Git workflow.
 
+### API testing notes
+
+- Local httpbin is used for deterministic API smoke tests in CI.
+- ReqRes is explored separately as an external API service.
+- During manual verification of `GET /api/users/2`, requests with a valid key, an invalid `x-api-key`, and no API key all returned HTTP `200`.
+- This endpoint therefore does not provide a reliable negative test for API-key validation under the observed conditions.
+- API-key rejection scenarios are covered by a deterministic local mock contract, not treated as proof of ReqRes authentication behavior.
+- Revisit ReqRes authentication coverage if its behavior or project configuration changes.
+
 ### Next
 
 - Continue expanding meaningful Web UI, API, and Mobile test coverage.
@@ -37,6 +46,7 @@ A practical QA automation lab with three independent test domains:
 
 - [Architecture](ARCHITECTURE.md) — project architecture and design principles.
 - [Git commands](docs/git-commands.md) — Git and GitHub workflow.
+- [Development workflow](docs/development-workflow.md) — step-by-step process for changing, validating, committing, and publishing project updates.
 - [Mobile testing commands](docs/mobile-commands.md) — Android Emulator, ADB, Appium, and Pytest.
 - [Playwright commands](docs/playwright-commands.md) — Playwright, Web/API tests, and TypeScript.
 
