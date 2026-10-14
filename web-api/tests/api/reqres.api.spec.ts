@@ -49,3 +49,19 @@ test("ReqRes returns 404 for a non-existent user", async ({ request }) => {
   const body = await response.json();
   expect(body.data).toBeUndefined();
 });
+
+test("ReqRes rejects an invalid API key", async ({ request }) => {
+  const response = await request.get("https://reqres.in/api/users/2", {
+    headers: {
+      "x-api-key": "invalid-test-key",
+    },
+  });
+
+  expect(response.status()).toBe(403);
+
+  const body = await response.json();
+
+  expect(body).toMatchObject({
+    error: "invalid_api_key",
+  });
+});
