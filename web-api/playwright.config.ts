@@ -1,4 +1,18 @@
 import { defineConfig } from "@playwright/test";
+import { readFileSync } from "node:fs";
+
+const envFile = ".env.local";
+
+try {
+  const envContent = readFileSync(envFile, "utf8");
+  const match = envContent.match(/^REQRES_API_KEY=(.*)$/m);
+
+  if (match?.[1].trim()) {
+    process.env.REQRES_API_KEY ??= match[1].trim();
+  }
+} catch {
+  // Local environment file is optional; CI can provide environment variables.
+}
 
 export default defineConfig({
   testDir: "./tests",
