@@ -45,3 +45,34 @@ test("user can remove a product from the cart", async ({ page }) => {
   await expect(page.locator(".cart_item")).toHaveCount(0);
   await expect(page.locator(".shopping_cart_badge")).toHaveCount(0);
 });
+
+test("user can continue shopping without losing cart items", async ({
+  page,
+}) => {
+  await page.goto("https://www.saucedemo.com/");
+
+  await page.getByTestId("username").fill("standard_user");
+  await page.getByTestId("password").fill("secret_sauce");
+  await page.getByTestId("login-button").click();
+
+  await expect(page).toHaveURL(/inventory\.html/);
+
+  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
+  await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
+
+  await page.getByTestId("shopping-cart-link").click();
+  await expect(page).toHaveURL(/cart\.html/);
+
+  await page.getByTestId("continue-shopping").click();
+
+  await expect(page).toHaveURL(/inventory\.html/);
+  await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
+
+  await page.getByTestId("shopping-cart-link").click();
+
+  await expect(page).toHaveURL(/cart\.html/);
+  await expect(page.locator(".cart_item .inventory_item_name")).toHaveText(
+    "Sauce Labs Backpack",
+  );
+  await expect(page.locator(".cart_quantity")).toHaveText("1");
+});
