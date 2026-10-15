@@ -36,7 +36,10 @@ test("user can complete a checkout", async ({ page }) => {
   await expect(page.locator(".summary_subtotal_label")).toHaveText(
     "Item total: $29.99",
   );
-  await expect(page.locator(".summary_total_label")).toContainText("Total:");
+  await expect(page.locator(".summary_tax_label")).toHaveText("Tax: $2.40");
+  await expect(page.locator(".summary_total_label")).toHaveText(
+    "Total: $32.39",
+  );
 
   // Finish checkout
   await page.getByTestId("finish").click();
