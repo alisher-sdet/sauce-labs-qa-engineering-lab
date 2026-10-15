@@ -1,13 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { loginAsStandardUser } from "./helpers/auth.js";
 
 test("products can be sorted by price from low to high", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("product-sort-container").selectOption("lohi");
 
@@ -30,13 +25,7 @@ test("products can be sorted by price from low to high", async ({ page }) => {
 });
 
 test("products can be sorted by price from high to low", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("product-sort-container").selectOption("hilo");
 
@@ -59,13 +48,7 @@ test("products can be sorted by price from high to low", async ({ page }) => {
 });
 
 test("products can be sorted by name from A to Z", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("product-sort-container").selectOption("az");
 
@@ -84,13 +67,7 @@ test("products can be sorted by name from A to Z", async ({ page }) => {
 });
 
 test("products can be sorted by name from Z to A", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("product-sort-container").selectOption("za");
 

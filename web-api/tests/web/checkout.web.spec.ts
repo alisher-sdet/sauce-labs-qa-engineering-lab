@@ -1,14 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { loginAsStandardUser } from "./helpers/auth.js";
 
 test("user can complete a checkout", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  // Login
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   // Add a product and open the cart
   await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
@@ -51,13 +45,7 @@ test("user can complete a checkout", async ({ page }) => {
 });
 
 test("checkout requires customer information", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
   await page.getByTestId("shopping-cart-link").click();
@@ -75,13 +63,7 @@ test("checkout requires customer information", async ({ page }) => {
 });
 
 test("checkout requires a last name", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
   await page.getByTestId("shopping-cart-link").click();
@@ -100,13 +82,7 @@ test("checkout requires a last name", async ({ page }) => {
 });
 
 test("checkout requires a postal code", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
   await page.getByTestId("shopping-cart-link").click();
@@ -125,13 +101,7 @@ test("checkout requires a postal code", async ({ page }) => {
 });
 
 test("cart is cleared after a successful checkout", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
   await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
