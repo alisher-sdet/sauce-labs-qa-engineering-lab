@@ -95,3 +95,28 @@ test("checkout requires a last name", async ({ page }) => {
     "Error: Last Name is required",
   );
 });
+
+test("checkout requires a postal code", async ({ page }) => {
+  await page.goto("https://www.saucedemo.com/");
+
+  await page.getByTestId("username").fill("standard_user");
+  await page.getByTestId("password").fill("secret_sauce");
+  await page.getByTestId("login-button").click();
+
+  await expect(page).toHaveURL(/inventory\.html/);
+
+  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
+  await page.getByTestId("shopping-cart-link").click();
+  await page.getByTestId("checkout").click();
+
+  await expect(page).toHaveURL(/checkout-step-one\.html/);
+
+  await page.getByTestId("firstName").fill("Alex");
+  await page.getByTestId("lastName").fill("Tester");
+  await page.getByTestId("continue").click();
+
+  await expect(page).toHaveURL(/checkout-step-one\.html/);
+  await expect(page.locator('[data-test="error"]')).toContainText(
+    "Error: Postal Code is required",
+  );
+});
