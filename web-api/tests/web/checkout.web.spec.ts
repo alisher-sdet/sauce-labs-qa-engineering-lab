@@ -46,3 +46,27 @@ test("user can complete a checkout", async ({ page }) => {
     "Thank you for your order!",
   );
 });
+
+test("checkout requires customer information", async ({ page }) => {
+  await page.goto("https://www.saucedemo.com/");
+
+  await page.getByTestId("username").fill("standard_user");
+  await page.getByTestId("password").fill("secret_sauce");
+  await page.getByTestId("login-button").click();
+
+  await expect(page).toHaveURL(/inventory\.html/);
+
+  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
+  await page.getByTestId("shopping-cart-link").click();
+  await page.getByTestId("checkout").click();
+
+  await expect(page).toHaveURL(/checkout-step-one\.html/);
+
+  // Continue without entering customer information
+  await page.getByTestId("continue").click();
+
+  await expect(page).toHaveURL(/checkout-step-one\.html/);
+  await expect(page.locator('[data-test="error"]')).toContainText(
+    "Error: First Name is required",
+  );
+});
