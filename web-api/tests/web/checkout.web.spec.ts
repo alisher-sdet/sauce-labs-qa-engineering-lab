@@ -1,12 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { loginAsStandardUser } from "./helpers/auth.js";
+import { addBackpackAndOpenCart } from "./helpers/cart.js";
 
 test("user can complete a checkout", async ({ page }) => {
   await loginAsStandardUser(page);
 
   // Add a product and open the cart
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
-  await page.getByTestId("shopping-cart-link").click();
+  await addBackpackAndOpenCart(page);
 
   await expect(page).toHaveURL(/cart\.html/);
   await expect(page.locator(".cart_item")).toHaveCount(1);
@@ -47,8 +47,7 @@ test("user can complete a checkout", async ({ page }) => {
 test("checkout requires customer information", async ({ page }) => {
   await loginAsStandardUser(page);
 
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
-  await page.getByTestId("shopping-cart-link").click();
+  await addBackpackAndOpenCart(page);
   await page.getByTestId("checkout").click();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
@@ -65,8 +64,7 @@ test("checkout requires customer information", async ({ page }) => {
 test("checkout requires a last name", async ({ page }) => {
   await loginAsStandardUser(page);
 
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
-  await page.getByTestId("shopping-cart-link").click();
+  await addBackpackAndOpenCart(page);
   await page.getByTestId("checkout").click();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
@@ -84,8 +82,7 @@ test("checkout requires a last name", async ({ page }) => {
 test("checkout requires a postal code", async ({ page }) => {
   await loginAsStandardUser(page);
 
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
-  await page.getByTestId("shopping-cart-link").click();
+  await addBackpackAndOpenCart(page);
   await page.getByTestId("checkout").click();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
@@ -103,10 +100,9 @@ test("checkout requires a postal code", async ({ page }) => {
 test("cart is cleared after a successful checkout", async ({ page }) => {
   await loginAsStandardUser(page);
 
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
+  await addBackpackAndOpenCart(page);
   await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
 
-  await page.getByTestId("shopping-cart-link").click();
   await page.getByTestId("checkout").click();
 
   await page.getByTestId("firstName").fill("Alex");
