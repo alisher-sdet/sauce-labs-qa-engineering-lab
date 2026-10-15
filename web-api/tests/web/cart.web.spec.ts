@@ -1,13 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { loginAsStandardUser } from "./helpers/auth.js";
 
 test("user can add a product to the cart", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
-
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
-
-  await expect(page).toHaveURL(/inventory\.html/);
+  await loginAsStandardUser(page);
 
   await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
 
