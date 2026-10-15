@@ -57,3 +57,28 @@ test("products can be sorted by price from high to low", async ({ page }) => {
 
   expect(numericPrices).toEqual([...numericPrices].sort((a, b) => b - a));
 });
+
+test("products can be sorted by name from A to Z", async ({ page }) => {
+  await page.goto("https://www.saucedemo.com/");
+
+  await page.getByTestId("username").fill("standard_user");
+  await page.getByTestId("password").fill("secret_sauce");
+  await page.getByTestId("login-button").click();
+
+  await expect(page).toHaveURL(/inventory\.html/);
+
+  await page.getByTestId("product-sort-container").selectOption("az");
+
+  const productNames = await page
+    .locator(".inventory_item_name")
+    .allTextContents();
+
+  expect(productNames.length).toBeGreaterThan(0);
+
+  const normalizedNames = productNames.map((name) => name.trim());
+
+  expect(normalizedNames.every((name) => name.length > 0)).toBe(true);
+  expect(normalizedNames).toEqual(
+    [...normalizedNames].sort((a, b) => a.localeCompare(b)),
+  );
+});
