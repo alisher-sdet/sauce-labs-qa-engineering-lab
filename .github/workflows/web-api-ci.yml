@@ -65,6 +65,7 @@ jobs:
 
       - name: Run Web and API tests
         env:
+          LOAD_LOCAL_ENV: "false"
           REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
         run: npm test
 
