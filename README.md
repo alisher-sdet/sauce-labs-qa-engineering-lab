@@ -22,8 +22,8 @@ A practical QA automation lab with three independent test domains:
 - API smoke test: local httpbin query-parameter response.
 - Mobile smoke tests for My Demo App Android.
 - Dependency lockfiles for Node.js and Python.
-- GitHub Actions Web/API CI: installs dependencies, runs TypeScript typecheck, ESLint, and Prettier checks, starts local httpbin, and executes Web/API tests.
-- GitHub Actions Mobile Android CI: prepares an Android emulator, installs My Demo App, and runs the mobile smoke tests.
+- GitHub Actions Web/API CI: installs dependencies, runs TypeScript typecheck, ESLint, and Prettier checks, starts local httpbin, executes Web/API tests, and uploads Playwright HTML and JUnit XML reports.
+- GitHub Actions Mobile Android CI: prepares an Android emulator, verifies the downloaded My Demo App APK checksum, and runs the mobile smoke tests. It uploads JUnit XML results and Appium logs on failure.
 - Mobile CI script: `mobile/scripts/ci-android-smoke.sh` installs locked Python dependencies, waits for the emulator and Appium, runs Pytest, and attempts to stop the Appium process it starts.
 - Documentation for local test execution and Git workflow.
 

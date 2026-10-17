@@ -57,6 +57,7 @@ The Web/API and Mobile domains have separate dependency management and test exec
 
 - `README.md` provides the project overview, status, and local execution instructions.
 - `docs/git-commands.md` documents the Git and GitHub workflow.
+- `docs/development-workflow.md` documents the step-by-step development, validation, commit, and publishing process.
 - `docs/mobile-commands.md` documents Android Emulator, ADB, Appium, and Pytest commands.
 - `docs/playwright-commands.md` documents Playwright and TypeScript commands.
 
