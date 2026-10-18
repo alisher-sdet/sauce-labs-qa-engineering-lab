@@ -39,3 +39,16 @@ class TestProductsScreen:
 
         assert product_names
         assert product_names == sorted(product_names, key=str.casefold)
+
+    def test_products_catalog_can_be_sorted_by_name_descending(self, driver):
+        products_screen = ProductsScreen(driver)
+
+        products_screen.sort_by_name_descending()
+        product_names = products_screen.get_all_product_names()
+
+        assert product_names
+        assert product_names == sorted(
+            product_names,
+            key=str.casefold,
+            reverse=True,
+        )
