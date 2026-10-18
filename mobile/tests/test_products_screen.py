@@ -52,3 +52,23 @@ class TestProductsScreen:
             key=str.casefold,
             reverse=True,
         )
+
+    def test_products_catalog_can_be_sorted_by_price_ascending(self, driver):
+        products_screen = ProductsScreen(driver)
+
+        products_screen.sort_by_price_ascending()
+        products = products_screen.get_all_products_with_prices()
+        prices = [price for _, price in products]
+
+        assert products
+        assert prices == sorted(prices)
+
+    def test_products_catalog_can_be_sorted_by_price_descending(self, driver):
+        products_screen = ProductsScreen(driver)
+
+        products_screen.sort_by_price_descending()
+        products = products_screen.get_all_products_with_prices()
+        prices = [price for _, price in products]
+
+        assert products
+        assert prices == sorted(prices, reverse=True)
