@@ -1,75 +1,17 @@
-import os
-
-from appium import webdriver
-from appium.options.android import UiAutomator2Options
-from appium.webdriver.common.appiumby import AppiumBy
-from selenium.webdriver.support.ui import WebDriverWait
-
-APPIUM_URL = os.getenv("APPIUM_URL", "http://127.0.0.1:4723")
-APP_PACKAGE = "com.saucelabs.mydemoapp.android"
+from screens.products_screen import ProductsScreen
 
 
 class TestProductsScreen:
-    def test_products_screen_title_is_displayed(self):
-        options = UiAutomator2Options()
-        options.platform_name = "Android"
-        options.automation_name = "UiAutomator2"
 
-        options.set_capability("uiautomator2ServerInstallTimeout", 180000)
-        options.set_capability("uiautomator2ServerLaunchTimeout", 120000)
+    def test_products_screen_title_is_displayed(self, driver):
+        products_screen = ProductsScreen(driver)
+        products_title = products_screen.get_title()
 
-        options.app_package = APP_PACKAGE
-        options.app_activity = ".view.activities.SplashActivity"
-        options.no_reset = True
-        options.dont_stop_app_on_reset = True
-        options.force_app_launch = False
+        assert products_title.is_displayed()
+        assert products_title.text == "Products"
 
-        udid = os.getenv("ANDROID_UDID")
-        if udid:
-            options.udid = udid
+    def test_products_list_is_not_empty(self, driver):
+        products_screen = ProductsScreen(driver)
+        product_titles = products_screen.get_product_titles()
 
-        driver = webdriver.Remote(APPIUM_URL, options=options)
-
-        try:
-            products_title = WebDriverWait(driver, 15).until(
-                lambda d: d.find_element(AppiumBy.ACCESSIBILITY_ID, "title")
-            )
-
-            assert products_title.is_displayed()
-            assert products_title.text == "Products"
-
-        finally:
-            driver.quit()
-
-    def test_products_list_is_not_empty(self):
-        options = UiAutomator2Options()
-        options.platform_name = "Android"
-        options.automation_name = "UiAutomator2"
-
-        options.set_capability("uiautomator2ServerInstallTimeout", 180000)
-        options.set_capability("uiautomator2ServerLaunchTimeout", 120000)
-
-        options.app_package = APP_PACKAGE
-        options.app_activity = ".view.activities.SplashActivity"
-        options.no_reset = True
-        options.dont_stop_app_on_reset = True
-        options.force_app_launch = False
-
-        udid = os.getenv("ANDROID_UDID")
-        if udid:
-            options.udid = udid
-
-        driver = webdriver.Remote(APPIUM_URL, options=options)
-
-        try:
-            product_titles = WebDriverWait(driver, 15).until(
-                lambda d: d.find_elements(
-                    AppiumBy.ID,
-                    f"{APP_PACKAGE}:id/titleTV",
-                )
-            )
-
-            assert any(title.is_displayed() for title in product_titles)
-
-        finally:
-            driver.quit()
+        assert any(title.is_displayed() for title in product_titles)
