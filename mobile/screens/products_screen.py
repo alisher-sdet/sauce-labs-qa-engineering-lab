@@ -6,6 +6,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 class ProductsScreen:
     TITLE = (AppiumBy.ACCESSIBILITY_ID, "title")
     PRODUCT_TITLES = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/titleTV")
+    SORT_BUTTON = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/sortIV")
+    SORT_NAME_ASC = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/nameAscCL")
+    SORT_NAME_DESC = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/nameDesCL")
+    SORT_PRICE_ASC = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/priceAscCL")
+    SORT_PRICE_DESC = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/priceDesCL")
 
     def __init__(self, driver: WebDriver, timeout: int = 15):
         self.driver = driver
@@ -53,3 +58,16 @@ class ProductsScreen:
                 break
 
         return names
+
+    def open_sort_menu(self):
+        self.wait.until(lambda driver: driver.find_element(*self.SORT_BUTTON)).click()
+
+    def sort_by_name_ascending(self):
+        self.open_sort_menu()
+        self.wait.until(lambda driver: driver.find_element(*self.SORT_NAME_ASC)).click()
+
+    def sort_by_name_descending(self):
+        self.open_sort_menu()
+        self.wait.until(
+            lambda driver: driver.find_element(*self.SORT_NAME_DESC)
+        ).click()

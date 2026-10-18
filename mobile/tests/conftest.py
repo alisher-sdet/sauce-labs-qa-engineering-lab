@@ -19,9 +19,9 @@ def driver():
 
     options.app_package = APP_PACKAGE
     options.app_activity = ".view.activities.SplashActivity"
-    options.no_reset = True
-    options.dont_stop_app_on_reset = True
-    options.force_app_launch = False
+    options.no_reset = False
+    options.dont_stop_app_on_reset = False
+    options.force_app_launch = True
 
     udid = os.getenv("ANDROID_UDID")
     if udid:

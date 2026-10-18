@@ -30,3 +30,12 @@ class TestProductsScreen:
         assert product_names
         assert len(set(product_names)) == len(product_names)
         assert all(name in product_names for name in expected_products)
+
+    def test_products_catalog_can_be_sorted_by_name_ascending(self, driver):
+        products_screen = ProductsScreen(driver)
+
+        products_screen.sort_by_name_ascending()
+        product_names = products_screen.get_all_product_names()
+
+        assert product_names
+        assert product_names == sorted(product_names, key=str.casefold)
