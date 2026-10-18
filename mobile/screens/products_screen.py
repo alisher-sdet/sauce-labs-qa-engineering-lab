@@ -25,3 +25,31 @@ class ProductsScreen:
 
     def get_product_names(self) -> list[str]:
         return [title.text for title in self.get_product_titles()]
+
+    def get_all_product_names(self) -> list[str]:
+        names = []
+        seen = set()
+
+        while True:
+            for title in self.driver.find_elements(*self.PRODUCT_TITLES):
+                name = title.text
+                if name and name not in seen:
+                    names.append(name)
+                    seen.add(name)
+
+            can_scroll_more = self.driver.execute_script(
+                "mobile: scrollGesture",
+                {
+                    "left": 50,
+                    "top": 200,
+                    "width": self.driver.get_window_size()["width"] - 100,
+                    "height": self.driver.get_window_size()["height"] - 300,
+                    "direction": "down",
+                    "percent": 0.75,
+                },
+            )
+
+            if not can_scroll_more:
+                break
+
+        return names

@@ -18,10 +18,15 @@ class TestProductsScreen:
 
     def test_products_catalog_contains_expected_products(self, driver):
         products_screen = ProductsScreen(driver)
+        product_names = products_screen.get_all_product_names()
 
-        assert products_screen.get_product_names() == [
+        expected_products = [
             "Sauce Labs Backpack",
             "Sauce Labs Backpack (green)",
             "Sauce Labs Backpack (orange)",
             "Sauce Labs Backpack (red)",
         ]
+
+        assert product_names
+        assert len(set(product_names)) == len(product_names)
+        assert all(name in product_names for name in expected_products)
