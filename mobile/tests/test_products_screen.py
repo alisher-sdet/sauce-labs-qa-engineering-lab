@@ -15,3 +15,13 @@ class TestProductsScreen:
         product_titles = products_screen.get_product_titles()
 
         assert any(title.is_displayed() for title in product_titles)
+
+    def test_products_catalog_contains_expected_products(self, driver):
+        products_screen = ProductsScreen(driver)
+
+        assert products_screen.get_product_names() == [
+            "Sauce Labs Backpack",
+            "Sauce Labs Backpack (green)",
+            "Sauce Labs Backpack (orange)",
+            "Sauce Labs Backpack (red)",
+        ]

@@ -22,3 +22,6 @@ class ProductsScreen:
                 else False
             )
         )
+
+    def get_product_names(self) -> list[str]:
+        return [title.text for title in self.get_product_titles()]
