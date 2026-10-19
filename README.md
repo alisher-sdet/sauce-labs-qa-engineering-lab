@@ -26,6 +26,7 @@ A practical QA automation lab with three independent test domains:
 - GitHub Actions Mobile Android CI: prepares an Android emulator, verifies the downloaded My Demo App APK checksum, and runs the mobile smoke tests. It uploads JUnit XML results and Appium logs on failure.
 - Mobile CI script: `mobile/scripts/ci-android-smoke.sh` installs locked Python dependencies, waits for the emulator and Appium, runs Pytest, and attempts to stop the Appium process it starts.
 - Documentation for local test execution and Git workflow.
+- Mobile Screen Object pattern: screen locators, UI interactions, and product catalog collection are encapsulated in `ProductsScreen`, keeping test scenarios focused on behavior and assertions.
 
 ### API testing notes
 

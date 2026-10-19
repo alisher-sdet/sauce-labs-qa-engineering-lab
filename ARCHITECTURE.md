@@ -19,13 +19,17 @@ These targets are independent. The repository does not claim an end-to-end integ
 │       ├── mobile-android-ci.yml
 │       └── web-api-ci.yml
 ├── docs/
+│   ├── development-workflow.md
 │   ├── git-commands.md
 │   ├── mobile-commands.md
 │   └── playwright-commands.md
 ├── mobile/
+│   ├── screens/
+│   │   └── products_screen.py
 │   ├── scripts/
 │   │   └── ci-android-smoke.sh
 │   ├── tests/
+│   │   ├── conftest.py
 │   │   └── test_products_screen.py
 │   ├── pyproject.toml
 │   └── uv.lock
@@ -43,6 +47,19 @@ These targets are independent. The repository does not claim an end-to-end integ
 ```
 
 The Web/API and Mobile domains have separate dependency management and test execution.
+
+## Mobile UI test design
+
+The Mobile domain uses the **Screen Object pattern**, a mobile-oriented variant of the Page Object pattern.
+
+- `mobile/tests/` contains test scenarios and assertions.
+- `mobile/screens/` encapsulates screen-specific locators, UI interactions, scrolling, and product data collection.
+- `ProductsScreen` represents the Products screen and provides methods for retrieving product names and prices, interacting with sorting controls, and collecting catalog data.
+- Tests use `ProductsScreen` for screen interactions and keep assertions about application behavior in the test scenarios.
+
+The Screen Object separates UI interaction details from test intent. Assertions that verify application behavior remain in the tests.
+
+New abstractions should be introduced only when justified by actual code and demonstrated maintenance or reuse needs.
 
 ## CI boundaries
 
@@ -66,6 +83,7 @@ The Web/API and Mobile domains have separate dependency management and test exec
 - Keep each domain's dependencies and test execution separate.
 - Use lockfiles for reproducible dependency installation.
 - Keep secrets out of source control.
-- Begin with one smoke test per domain before expanding coverage.
+- Begin with small, executable smoke tests before expanding coverage.
+- Keep test scenarios and assertions separate from screen-specific UI interaction details.
 - Prefer deterministic local checks for blocking CI.
-- Add architecture rules and abstractions only when justified by actual code.
+- Add architecture rules and abstractions only when justified by actual code and demonstrated needs.
