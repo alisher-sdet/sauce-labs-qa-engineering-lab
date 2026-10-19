@@ -20,7 +20,7 @@ A practical QA automation lab with three independent test domains:
 
 - Web UI smoke test: SauceDemo login and inventory page.
 - API smoke test: local httpbin query-parameter response.
-- Mobile smoke tests for My Demo App Android.
+- Mobile UI smoke tests for My Demo App Android using Appium, Python, and Pytest. The current suite covers screen title visibility, catalog completeness, and sorting by product name and price.
 - Dependency lockfiles for Node.js and Python.
 - GitHub Actions Web/API CI: installs dependencies, runs TypeScript typecheck, ESLint, and Prettier checks, starts local httpbin, executes Web/API tests, and uploads Playwright HTML and JUnit XML reports.
 - GitHub Actions Mobile Android CI: prepares an Android emulator, verifies the downloaded My Demo App APK checksum, and runs the mobile smoke tests. It uploads JUnit XML results and Appium logs on failure.
@@ -39,7 +39,7 @@ A practical QA automation lab with three independent test domains:
 ### Next
 
 - Continue expanding meaningful Web UI, API, and Mobile test coverage.
-- Improve the reproducibility and reliability of mobile tests in CI.
+- Maintain reliable mobile UI checks in CI; investigate further performance optimization only when measurements justify it.
 - Keep documentation aligned with actual project behavior and CI configuration.
 
 ## Documentation

@@ -126,6 +126,28 @@ cd ~/Documents/myPro/sauce-labs-qa-lab/mobile
 uv run pytest -v
 ```
 
+### Полный запуск с проверкой зависимостей по lockfile
+
+```bash
+uv run --locked pytest -v
+```
+
+### Профилирование длительности тестов
+
+```bash
+uv run --locked pytest -v --durations=10 --durations-min=1.0
+```
+
+Pytest выведет десять самых медленных этапов выполнения, если их длительность не меньше одной секунды. Это помогает определить тесты, требующие дальнейшего исследования. Само по себе измерение не доказывает причину задержки.
+
+### Сохранить JUnit XML
+
+```bash
+uv run --locked pytest -v --junitxml=/tmp/mobile-results.xml
+```
+
+JUnit XML можно использовать для анализа результатов тестов и интеграции с CI. В GitHub Actions workflow `mobile-android-ci.yml` сохраняет отчёт в артефакте `mobile-junit-test-results`.
+
 ### Запустить тесты одного файла
 
 ```bash
@@ -181,18 +203,24 @@ uv run pytest --collect-only -v tests/test_products_screen.py
 
 ## 6. Проверки перед коммитом
 
-Перед коммитом из каталога `mobile`:
+Из каталога `mobile`:
 
 ```bash
 uv run --locked ruff check .
-uv run pytest -v
+uv run --locked pytest -v
 ```
 
-Затем из корня репозитория:
+При необходимости профилирования:
+
+```bash
+uv run --locked pytest -v --durations=10 --durations-min=1.0
+```
+
+Из корня репозитория:
 
 ```bash
 git diff --check
 git status --short
 ```
 
-После изменения тестов сначала выполнить соответствующие локальные проверки. Не отправлять изменения в GitHub до проверки результата.
+Перед отправкой изменений убедись, что проверки завершились успешно. Не ослабляй assertions ради сокращения времени выполнения. Если оптимизация производительности не подтверждена измерениями, сохраняй проверенное поведение.
