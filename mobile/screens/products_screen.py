@@ -46,26 +46,32 @@ class ProductsScreen:
         names = []
         seen = set()
 
+        def scroll_list(direction: str) -> bool:
+            scroll_view = self.wait.until(
+                lambda driver: driver.find_element(*self.SCROLL_VIEW)
+            )
+
+            return self.driver.execute_script(
+                "mobile: scrollGesture",
+                {
+                    "elementId": scroll_view.id,
+                    "direction": direction,
+                    "percent": 0.5,
+                },
+            )
+
+        # Сначала возвращаем каталог в начало.
+        while scroll_list("up"):
+            pass
+
         while True:
             for title in self.driver.find_elements(*self.PRODUCT_TITLES):
-                name = title.text
+                name = title.text.strip()
                 if name and name not in seen:
                     names.append(name)
                     seen.add(name)
 
-            can_scroll_more = self.driver.execute_script(
-                "mobile: scrollGesture",
-                {
-                    "left": 50,
-                    "top": 200,
-                    "width": self.driver.get_window_size()["width"] - 100,
-                    "height": self.driver.get_window_size()["height"] - 300,
-                    "direction": "down",
-                    "percent": 0.75,
-                },
-            )
-
-            if not can_scroll_more:
+            if not scroll_list("down"):
                 break
 
         return names
