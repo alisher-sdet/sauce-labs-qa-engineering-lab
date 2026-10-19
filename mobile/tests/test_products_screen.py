@@ -55,20 +55,28 @@ class TestProductsScreen:
 
     def test_products_catalog_can_be_sorted_by_price_ascending(self, driver):
         products_screen = ProductsScreen(driver)
+        original_names = products_screen.get_all_product_names()
 
         products_screen.sort_by_price_ascending()
         products = products_screen.get_all_products_with_prices()
+        product_names = [name for name, _ in products]
         prices = [price for _, price in products]
 
         assert products
+        assert len(product_names) == len(set(product_names))
+        assert set(product_names) == set(original_names)
         assert prices == sorted(prices)
 
     def test_products_catalog_can_be_sorted_by_price_descending(self, driver):
         products_screen = ProductsScreen(driver)
+        original_names = products_screen.get_all_product_names()
 
         products_screen.sort_by_price_descending()
         products = products_screen.get_all_products_with_prices()
+        product_names = [name for name, _ in products]
         prices = [price for _, price in products]
 
         assert products
+        assert len(product_names) == len(set(product_names))
+        assert set(product_names) == set(original_names)
         assert prices == sorted(prices, reverse=True)

@@ -13,7 +13,10 @@ class ProductsScreen:
         AppiumBy.ID,
         "com.saucelabs.mydemoapp.android:id/priceTV",
     )
-
+    SCROLL_VIEW = (
+        AppiumBy.ID,
+        "com.saucelabs.mydemoapp.android:id/scrollView",
+    )
     SORT_BUTTON = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/sortIV")
     SORT_NAME_ASC = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/nameAscCL")
     SORT_NAME_DESC = (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/nameDesCL")
@@ -93,7 +96,25 @@ class ProductsScreen:
         ).click()
 
     def get_all_products_with_prices(self) -> list[tuple[str, float]]:
-        products = {}
+        products: dict[str, float] = {}
+
+        def scroll_list(direction: str) -> bool:
+            scroll_view = self.wait.until(
+                lambda driver: driver.find_element(*self.SCROLL_VIEW)
+            )
+
+            return self.driver.execute_script(
+                "mobile: scrollGesture",
+                {
+                    "elementId": scroll_view.id,
+                    "direction": direction,
+                    "percent": 0.5,
+                },
+            )
+
+        # Возвращаем список в начало.
+        while scroll_list("up"):
+            pass
 
         while True:
             cards = self.driver.find_elements(
@@ -115,19 +136,7 @@ class ProductsScreen:
                 if name and price_text:
                     products[name] = float(price_text)
 
-            can_scroll_more = self.driver.execute_script(
-                "mobile: scrollGesture",
-                {
-                    "left": 50,
-                    "top": 200,
-                    "width": self.driver.get_window_size()["width"] - 100,
-                    "height": self.driver.get_window_size()["height"] - 300,
-                    "direction": "down",
-                    "percent": 0.75,
-                },
-            )
-
-            if not can_scroll_more:
+            if not scroll_list("down"):
                 break
 
         return list(products.items())
