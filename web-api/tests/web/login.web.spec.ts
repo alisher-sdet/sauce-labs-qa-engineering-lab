@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { LoginPage } from "../../pages/LoginPage.js";
 import { loginAsStandardUser } from "./helpers/auth.js";
 
 test("standard user can log in and open inventory", async ({ page }) => {
@@ -9,16 +10,13 @@ test("standard user can log in and open inventory", async ({ page }) => {
 test("standard user cannot log in with an incorrect password", async ({
   page,
 }) => {
-  await page.goto("https://www.saucedemo.com/");
+  const loginPage = new LoginPage(page);
 
-  await page.getByTestId("username").fill("standard_user");
-  await page.getByTestId("password").fill("wrong_password");
-  await page.getByTestId("login-button").click();
+  await loginPage.goto();
+  await loginPage.login("standard_user", "wrong_password");
 
-  const errorMessage = page.getByTestId("error");
-
-  await expect(errorMessage).toBeVisible();
-  await expect(errorMessage).toHaveText(
+  await expect(loginPage.errorMessage).toBeVisible();
+  await expect(loginPage.errorMessage).toHaveText(
     "Epic sadface: Username and password do not match any user in this service",
   );
 
@@ -26,16 +24,13 @@ test("standard user cannot log in with an incorrect password", async ({
 });
 
 test("locked-out user cannot log in", async ({ page }) => {
-  await page.goto("https://www.saucedemo.com/");
+  const loginPage = new LoginPage(page);
 
-  await page.getByTestId("username").fill("locked_out_user");
-  await page.getByTestId("password").fill("secret_sauce");
-  await page.getByTestId("login-button").click();
+  await loginPage.goto();
+  await loginPage.login("locked_out_user", "secret_sauce");
 
-  const errorMessage = page.getByTestId("error");
-
-  await expect(errorMessage).toBeVisible();
-  await expect(errorMessage).toHaveText(
+  await expect(loginPage.errorMessage).toBeVisible();
+  await expect(loginPage.errorMessage).toHaveText(
     "Epic sadface: Sorry, this user has been locked out.",
   );
 
