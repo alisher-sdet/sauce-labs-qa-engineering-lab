@@ -1,17 +1,18 @@
 import { test, expect } from "@playwright/test";
+import { InventoryPage } from "../../pages/InventoryPage.js";
 import { loginAsStandardUser } from "./helpers/auth.js";
 
 test("products can be sorted by price from low to high", async ({ page }) => {
   await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
 
-  await page.getByTestId("product-sort-container").selectOption("lohi");
+  await inventory.sortBy("lohi");
 
-  const prices = await page.locator(".inventory_item_price").allTextContents();
+  const prices = await inventory.getProductPrices();
   expect(prices.length).toBeGreaterThan(0);
 
   const numericPrices = prices.map((price) => {
-    const normalizedPrice = price.trim().replace("$", "");
-    const numericPrice = Number(normalizedPrice);
+    const numericPrice = Number(price.replace("$", ""));
 
     expect(
       Number.isFinite(numericPrice),
@@ -26,15 +27,15 @@ test("products can be sorted by price from low to high", async ({ page }) => {
 
 test("products can be sorted by price from high to low", async ({ page }) => {
   await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
 
-  await page.getByTestId("product-sort-container").selectOption("hilo");
+  await inventory.sortBy("hilo");
 
-  const prices = await page.locator(".inventory_item_price").allTextContents();
+  const prices = await inventory.getProductPrices();
   expect(prices.length).toBeGreaterThan(0);
 
   const numericPrices = prices.map((price) => {
-    const normalizedPrice = price.trim().replace("$", "");
-    const numericPrice = Number(normalizedPrice);
+    const numericPrice = Number(price.replace("$", ""));
 
     expect(
       Number.isFinite(numericPrice),
@@ -49,38 +50,30 @@ test("products can be sorted by price from high to low", async ({ page }) => {
 
 test("products can be sorted by name from A to Z", async ({ page }) => {
   await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
 
-  await page.getByTestId("product-sort-container").selectOption("az");
+  await inventory.sortBy("az");
 
-  const productNames = await page
-    .locator(".inventory_item_name")
-    .allTextContents();
-
+  const productNames = await inventory.getProductNames();
   expect(productNames.length).toBeGreaterThan(0);
+  expect(productNames.every((name) => name.length > 0)).toBe(true);
 
-  const normalizedNames = productNames.map((name) => name.trim());
-
-  expect(normalizedNames.every((name) => name.length > 0)).toBe(true);
-  expect(normalizedNames).toEqual(
-    [...normalizedNames].sort((a, b) => a.localeCompare(b)),
+  expect(productNames).toEqual(
+    [...productNames].sort((a, b) => a.localeCompare(b)),
   );
 });
 
 test("products can be sorted by name from Z to A", async ({ page }) => {
   await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
 
-  await page.getByTestId("product-sort-container").selectOption("za");
+  await inventory.sortBy("za");
 
-  const productNames = await page
-    .locator(".inventory_item_name")
-    .allTextContents();
-
+  const productNames = await inventory.getProductNames();
   expect(productNames.length).toBeGreaterThan(0);
+  expect(productNames.every((name) => name.length > 0)).toBe(true);
 
-  const normalizedNames = productNames.map((name) => name.trim());
-
-  expect(normalizedNames.every((name) => name.length > 0)).toBe(true);
-  expect(normalizedNames).toEqual(
-    [...normalizedNames].sort((a, b) => b.localeCompare(a)),
+  expect(productNames).toEqual(
+    [...productNames].sort((a, b) => b.localeCompare(a)),
   );
 });
