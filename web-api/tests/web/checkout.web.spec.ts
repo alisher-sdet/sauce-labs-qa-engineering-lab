@@ -3,12 +3,14 @@ import { loginAsStandardUser } from "./helpers/auth.js";
 import { addBackpackAndOpenCart } from "./helpers/cart.js";
 import { CartPage } from "../../pages/CartPage.js";
 import { InventoryPage } from "../../pages/InventoryPage.js";
+import { CheckoutPage } from "../../pages/CheckoutPage.js";
 
 test("user can complete a checkout", async ({ page }) => {
   await loginAsStandardUser(page);
 
   // Add a product and open the cart
   await addBackpackAndOpenCart(page);
+  const checkout = new CheckoutPage(page);
   const cart = new CartPage(page);
 
   await expect(page).toHaveURL(/cart\.html/);
@@ -20,9 +22,7 @@ test("user can complete a checkout", async ({ page }) => {
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
   // Enter customer information
-  await page.getByTestId("firstName").fill("Alex");
-  await page.getByTestId("lastName").fill("Tester");
-  await page.getByTestId("postalCode").fill("10001");
+  await checkout.fillCustomerInformation("Alex", "Tester", "10001");
   await page.getByTestId("continue").click();
 
   // Verify order overview
@@ -74,9 +74,10 @@ test("checkout requires a last name", async ({ page }) => {
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
-  await page.getByTestId("firstName").fill("Alex");
-  await page.getByTestId("postalCode").fill("10001");
-  await page.getByTestId("continue").click();
+  const checkout = new CheckoutPage(page);
+  await checkout.firstNameInput.fill("Alex");
+  await checkout.postalCodeInput.fill("10001");
+  await checkout.continue();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
   await expect(page.locator('[data-test="error"]')).toContainText(
@@ -88,13 +89,14 @@ test("checkout requires a postal code", async ({ page }) => {
   await loginAsStandardUser(page);
 
   await addBackpackAndOpenCart(page);
+  const checkout = new CheckoutPage(page);
   const cart = new CartPage(page);
   await cart.checkout();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
-  await page.getByTestId("firstName").fill("Alex");
-  await page.getByTestId("lastName").fill("Tester");
+  await checkout.firstNameInput.fill("Alex");
+  await checkout.lastNameInput.fill("Tester");
   await page.getByTestId("continue").click();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
@@ -107,14 +109,13 @@ test("cart is cleared after a successful checkout", async ({ page }) => {
   await loginAsStandardUser(page);
 
   await addBackpackAndOpenCart(page);
+  const checkout = new CheckoutPage(page);
   const cart = new CartPage(page);
   await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
 
   await cart.checkout();
 
-  await page.getByTestId("firstName").fill("Alex");
-  await page.getByTestId("lastName").fill("Tester");
-  await page.getByTestId("postalCode").fill("10001");
+  await checkout.fillCustomerInformation("Alex", "Tester", "10001");
   await page.getByTestId("continue").click();
 
   await expect(page).toHaveURL(/checkout-step-two\.html/);
