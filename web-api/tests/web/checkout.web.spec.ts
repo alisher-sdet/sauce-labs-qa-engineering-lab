@@ -1,18 +1,21 @@
 import { test, expect } from "@playwright/test";
 import { loginAsStandardUser } from "./helpers/auth.js";
 import { addBackpackAndOpenCart } from "./helpers/cart.js";
+import { CartPage } from "../../pages/CartPage.js";
+import { InventoryPage } from "../../pages/InventoryPage.js";
 
 test("user can complete a checkout", async ({ page }) => {
   await loginAsStandardUser(page);
 
   // Add a product and open the cart
   await addBackpackAndOpenCart(page);
+  const cart = new CartPage(page);
 
   await expect(page).toHaveURL(/cart\.html/);
   await expect(page.locator(".cart_item")).toHaveCount(1);
 
   // Start checkout
-  await page.getByTestId("checkout").click();
+  await cart.checkout();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
@@ -48,7 +51,8 @@ test("checkout requires customer information", async ({ page }) => {
   await loginAsStandardUser(page);
 
   await addBackpackAndOpenCart(page);
-  await page.getByTestId("checkout").click();
+  const cart = new CartPage(page);
+  await cart.checkout();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
@@ -65,7 +69,8 @@ test("checkout requires a last name", async ({ page }) => {
   await loginAsStandardUser(page);
 
   await addBackpackAndOpenCart(page);
-  await page.getByTestId("checkout").click();
+  const cart = new CartPage(page);
+  await cart.checkout();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
@@ -83,7 +88,8 @@ test("checkout requires a postal code", async ({ page }) => {
   await loginAsStandardUser(page);
 
   await addBackpackAndOpenCart(page);
-  await page.getByTestId("checkout").click();
+  const cart = new CartPage(page);
+  await cart.checkout();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
@@ -101,9 +107,10 @@ test("cart is cleared after a successful checkout", async ({ page }) => {
   await loginAsStandardUser(page);
 
   await addBackpackAndOpenCart(page);
+  const cart = new CartPage(page);
   await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
 
-  await page.getByTestId("checkout").click();
+  await cart.checkout();
 
   await page.getByTestId("firstName").fill("Alex");
   await page.getByTestId("lastName").fill("Tester");
@@ -120,7 +127,7 @@ test("cart is cleared after a successful checkout", async ({ page }) => {
   await expect(page).toHaveURL(/inventory\.html/);
   await expect(page.locator(".shopping_cart_badge")).toHaveCount(0);
 
-  await page.getByTestId("shopping-cart-link").click();
+  await new InventoryPage(page).openCart();
   await expect(page).toHaveURL(/cart\.html/);
   await expect(page.locator(".cart_item")).toHaveCount(0);
 });
