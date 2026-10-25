@@ -1,14 +1,16 @@
 import { test, expect } from "@playwright/test";
 import { loginAsStandardUser } from "./helpers/auth.js";
+import { InventoryPage } from "../../pages/InventoryPage.js";
 
 test("user can add a product to the cart", async ({ page }) => {
   await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
 
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
+  await inventory.addProduct("sauce-labs-backpack");
 
   await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
 
-  await page.getByTestId("shopping-cart-link").click();
+  await inventory.openCart();
 
   await expect(page).toHaveURL(/cart\.html/);
   await expect(page.locator(".cart_item .inventory_item_name")).toHaveText(
@@ -20,11 +22,12 @@ test("user can add a product to the cart", async ({ page }) => {
 
 test("user can remove a product from the cart", async ({ page }) => {
   await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
 
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
+  await inventory.addProduct("sauce-labs-backpack");
   await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
 
-  await page.getByTestId("shopping-cart-link").click();
+  await inventory.openCart();
 
   await expect(page).toHaveURL(/cart\.html/);
   await expect(page.locator(".cart_item")).toHaveCount(1);
@@ -39,11 +42,12 @@ test("user can continue shopping without losing cart items", async ({
   page,
 }) => {
   await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
 
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
+  await inventory.addProduct("sauce-labs-backpack");
   await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
 
-  await page.getByTestId("shopping-cart-link").click();
+  await inventory.openCart();
   await expect(page).toHaveURL(/cart\.html/);
 
   await page.getByTestId("continue-shopping").click();
@@ -51,7 +55,7 @@ test("user can continue shopping without losing cart items", async ({
   await expect(page).toHaveURL(/inventory\.html/);
   await expect(page.locator(".shopping_cart_badge")).toHaveText("1");
 
-  await page.getByTestId("shopping-cart-link").click();
+  await inventory.openCart();
 
   await expect(page).toHaveURL(/cart\.html/);
   await expect(page.locator(".cart_item .inventory_item_name")).toHaveText(
@@ -64,15 +68,16 @@ test("cart supports multiple products and removing one item", async ({
   page,
 }) => {
   await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
 
   // Add two different products
-  await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
-  await page.getByTestId("add-to-cart-sauce-labs-bike-light").click();
+  await inventory.addProduct("sauce-labs-backpack");
+  await inventory.addProduct("sauce-labs-bike-light");
 
   await expect(page.locator(".shopping_cart_badge")).toHaveText("2");
 
   // Verify both products in the cart
-  await page.getByTestId("shopping-cart-link").click();
+  await inventory.openCart();
 
   await expect(page).toHaveURL(/cart\.html/);
   await expect(page.locator(".cart_item")).toHaveCount(2);
