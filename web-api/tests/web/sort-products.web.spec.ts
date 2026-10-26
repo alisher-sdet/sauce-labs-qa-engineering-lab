@@ -77,6 +77,8 @@ test("sorting products does not change the product set", async ({ page }) => {
   await loginAsStandardUser(page);
   const inventory = new InventoryPage(page);
 
+  await expect(inventory.productNames.first()).toBeVisible();
+
   const namesBeforeSorting = await inventory.getProductNames();
   expect(namesBeforeSorting.length).toBeGreaterThan(0);
 
