@@ -27,6 +27,22 @@ export class CheckoutPage {
     await this.postalCodeInput.fill(postalCode);
   }
 
+  async fillFirstNameAndPostalCode(
+    firstName: string,
+    postalCode: string,
+  ): Promise<void> {
+    await this.firstNameInput.fill(firstName);
+    await this.postalCodeInput.fill(postalCode);
+  }
+
+  async fillFirstNameAndLastName(
+    firstName: string,
+    lastName: string,
+  ): Promise<void> {
+    await this.firstNameInput.fill(firstName);
+    await this.lastNameInput.fill(lastName);
+  }
+
   async continue(): Promise<void> {
     await this.continueButton.click();
   }

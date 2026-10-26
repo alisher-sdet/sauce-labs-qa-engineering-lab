@@ -23,7 +23,7 @@ test("user can complete a checkout", async ({ page }) => {
 
   // Enter customer information
   await checkout.fillCustomerInformation("Alex", "Tester", "10001");
-  await page.getByTestId("continue").click();
+  await checkout.continue();
 
   // Verify order overview
   await expect(page).toHaveURL(/checkout-step-two\.html/);
@@ -39,7 +39,7 @@ test("user can complete a checkout", async ({ page }) => {
   );
 
   // Finish checkout
-  await page.getByTestId("finish").click();
+  await checkout.finish();
 
   await expect(page).toHaveURL(/checkout-complete\.html/);
   await expect(page.locator(".complete-header")).toHaveText(
@@ -52,12 +52,13 @@ test("checkout requires customer information", async ({ page }) => {
 
   await addBackpackAndOpenCart(page);
   const cart = new CartPage(page);
+  const checkout = new CheckoutPage(page);
   await cart.checkout();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
   // Continue without entering customer information
-  await page.getByTestId("continue").click();
+  await checkout.continue();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
   await expect(page.locator('[data-test="error"]')).toContainText(
@@ -75,8 +76,7 @@ test("checkout requires a last name", async ({ page }) => {
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
   const checkout = new CheckoutPage(page);
-  await checkout.firstNameInput.fill("Alex");
-  await checkout.postalCodeInput.fill("10001");
+  await checkout.fillFirstNameAndPostalCode("Alex", "10001");
   await checkout.continue();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
@@ -95,9 +95,8 @@ test("checkout requires a postal code", async ({ page }) => {
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
 
-  await checkout.firstNameInput.fill("Alex");
-  await checkout.lastNameInput.fill("Tester");
-  await page.getByTestId("continue").click();
+  await checkout.fillFirstNameAndLastName("Alex", "Tester");
+  await checkout.continue();
 
   await expect(page).toHaveURL(/checkout-step-one\.html/);
   await expect(page.locator('[data-test="error"]')).toContainText(
@@ -116,14 +115,14 @@ test("cart is cleared after a successful checkout", async ({ page }) => {
   await cart.checkout();
 
   await checkout.fillCustomerInformation("Alex", "Tester", "10001");
-  await page.getByTestId("continue").click();
+  await checkout.continue();
 
   await expect(page).toHaveURL(/checkout-step-two\.html/);
-  await page.getByTestId("finish").click();
+  await checkout.finish();
 
   await expect(page).toHaveURL(/checkout-complete\.html/);
 
-  await page.getByTestId("back-to-products").click();
+  await checkout.backToProducts();
 
   await expect(page).toHaveURL(/inventory\.html/);
   await expect(page.locator(".shopping_cart_badge")).toHaveCount(0);
