@@ -61,6 +61,25 @@ The Screen Object separates UI interaction details from test intent. Assertions 
 
 New abstractions should be introduced only when justified by actual code and demonstrated maintenance or reuse needs.
 
+## Web UI test design
+
+The Web UI domain uses Playwright with TypeScript and the Page Object pattern.
+
+- `web-api/tests/web/` contains test scenarios and assertions.
+- `web-api/pages/` encapsulates page-specific locators and UI interactions.
+- `LoginPage` handles login form interactions.
+- `InventoryPage` handles product sorting, product data retrieval, adding products to the cart, and opening the cart.
+- `CartPage` handles cart item operations and checkout navigation.
+- `CheckoutPage` handles customer information entry and checkout navigation.
+- `web-api/tests/web/helpers/auth.ts` provides reusable standard-user login setup.
+- `web-api/tests/web/helpers/cart.ts` provides reusable setup for adding a backpack and opening the cart.
+
+Tests retain assertions about application behavior. Page Objects encapsulate UI interaction details and do not own test scenario expectations.
+
+The sorting tests verify ordering by product name and price. A separate test verifies that sorting preserves the product set.
+
+New abstractions should be introduced only when justified by demonstrated reuse or maintenance needs.
+
 ## CI boundaries
 
 - Web and API checks are defined in `.github/workflows/web-api-ci.yml`.

@@ -18,7 +18,9 @@ A practical QA automation lab with three independent test domains:
 
 ### Implemented
 
-- Web UI smoke test: SauceDemo login and inventory page.
+- Web UI automation: SauceDemo login, inventory sorting, cart operations, and checkout flows using Playwright, TypeScript, and Page Objects.
+- Web UI Page Objects: `LoginPage`, `InventoryPage`, `CartPage`, and `CheckoutPage`. Reusable authentication and cart setup helpers live under `web-api/tests/web/helpers/`.
+- Web UI coverage includes successful and unsuccessful login, product sorting by name and price, cart add/remove and persistence behavior, checkout validation, order completion, and cart clearing after checkout.
 - API smoke test: local httpbin query-parameter response.
 - Mobile UI smoke tests for My Demo App Android using Appium, Python, and Pytest. The current suite covers screen title visibility, catalog completeness, and sorting by product name and price.
 - Dependency lockfiles for Node.js and Python.

@@ -54,6 +54,24 @@ npx playwright test --headed
 npx playwright test --ui
 ```
 
+### Запустить конкретный файл веб-тестов
+
+```bash
+npx playwright test --project=web tests/web/sort-products.web.spec.ts
+```
+
+### Запустить один тест по названию
+
+```bash
+npx playwright test --project=web -g "sorting products does not change the product set"
+```
+
+### Запустить веб-тесты последовательно
+
+```bash
+npx playwright test --project=web --workers=1
+```
+
 ## 3. TypeScript
 
 ### Проверить типы без создания JavaScript-файлов
