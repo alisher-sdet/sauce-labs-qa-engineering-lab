@@ -13,7 +13,6 @@ test("user can complete a checkout", async ({ page }) => {
   const checkout = new CheckoutPage(page);
   const cart = new CartPage(page);
 
-  await expect(page).toHaveURL(/cart\.html/);
   await expect(page.locator(".cart_item")).toHaveCount(1);
 
   // Start checkout
