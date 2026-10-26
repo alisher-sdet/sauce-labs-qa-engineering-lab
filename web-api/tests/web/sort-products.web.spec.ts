@@ -2,16 +2,8 @@ import { test, expect } from "@playwright/test";
 import { InventoryPage } from "../../pages/InventoryPage.js";
 import { loginAsStandardUser } from "./helpers/auth.js";
 
-test("products can be sorted by price from low to high", async ({ page }) => {
-  await loginAsStandardUser(page);
-  const inventory = new InventoryPage(page);
-
-  await inventory.sortBy("lohi");
-
-  const prices = await inventory.getProductPrices();
-  expect(prices.length).toBeGreaterThan(0);
-
-  const numericPrices = prices.map((price) => {
+function parsePrices(prices: string[]): number[] {
+  return prices.map((price) => {
     const numericPrice = Number(price.replace("$", ""));
 
     expect(
@@ -21,6 +13,18 @@ test("products can be sorted by price from low to high", async ({ page }) => {
 
     return numericPrice;
   });
+}
+
+test("products can be sorted by price from low to high", async ({ page }) => {
+  await loginAsStandardUser(page);
+  const inventory = new InventoryPage(page);
+
+  await inventory.sortBy("lohi");
+
+  const prices = await inventory.getProductPrices();
+  expect(prices.length).toBeGreaterThan(0);
+
+  const numericPrices = parsePrices(prices);
 
   expect(numericPrices).toEqual([...numericPrices].sort((a, b) => a - b));
 });
@@ -34,16 +38,7 @@ test("products can be sorted by price from high to low", async ({ page }) => {
   const prices = await inventory.getProductPrices();
   expect(prices.length).toBeGreaterThan(0);
 
-  const numericPrices = prices.map((price) => {
-    const numericPrice = Number(price.replace("$", ""));
-
-    expect(
-      Number.isFinite(numericPrice),
-      `Invalid product price: "${price}"`,
-    ).toBe(true);
-
-    return numericPrice;
-  });
+  const numericPrices = parsePrices(prices);
 
   expect(numericPrices).toEqual([...numericPrices].sort((a, b) => b - a));
 });
